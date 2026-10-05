@@ -26,3 +26,36 @@ docker push $DOCKER_USER/flux-dev-serverless:latest
 
 `--platform linux/amd64` is required for Runpod.
 `--build-arg HF_TOKEN` is required because the repo is gated. The token is used only for that download `RUN` and is not stored as a container `ENV`.
+
+## Test the endpoint
+
+### Console
+
+Endpoint → **Requests** → paste the JSON above → **Run**. The first job can take several minutes (image pull + model load + generation).
+
+### Async API (recommended)
+
+Image jobs often exceed `/runsync` client timeouts. Submit with `/run`, then poll `/status`.
+
+```bash
+export RUNPOD_API_KEY=your_runpod_api_key
+export ENDPOINT_ID=your_endpoint_id
+
+curl -X POST "https://api.runpod.ai/v2/${ENDPOINT_ID}/run" \
+  -H "Authorization: Bearer ${RUNPOD_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "prompt": "A cinematic photo of a golden retriever astronaut on the moon, highly detailed",
+      "height": 1024,
+      "width": 1024,
+      "num_inference_steps": 28,
+      "guidance_scale": 3.5,
+      "seed": 42
+    },
+    "policy": {
+      "executionTimeout": 900000,
+      "ttl": 3600000
+    }
+  }'
+```
