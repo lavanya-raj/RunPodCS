@@ -6,6 +6,7 @@
 | `download_weights.py` | Caches FLUX.1-dev into `HF_HOME` during the image build |
 | `Dockerfile` | CUDA 12.1 + Python 3.11 venv + Torch + handler + baked model cache |
 | `requirements.txt` | Python deps (`runpod`, `diffusers`, `transformers`, …)|
+|`test_request.py`| Python script to test the serverless endpoint|
 
 ## Build and push the image
 
